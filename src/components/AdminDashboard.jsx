@@ -71,7 +71,7 @@ export default function AdminDashboard() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-brand-primary/30 border-t-pink-500 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
             <select 
               value={timeFilter} 
               onChange={(e) => setTimeFilter(e.target.value)}
-              className="bg-black/40 border border-white/10 text-white text-sm rounded-xl px-4 py-2 outline-none focus:border-pink-500/50 appearance-none min-w-[120px]"
+              className="bg-black/40 border border-white/10 text-white text-sm rounded-xl px-4 py-2 outline-none focus:border-brand-primary/50 appearance-none min-w-[120px]"
             >
               <option value="all">All Time</option>
               <option value="today">Today</option>
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
             <select 
               value={methodFilter} 
               onChange={(e) => setMethodFilter(e.target.value)}
-              className="bg-black/40 border border-white/10 text-white text-sm rounded-xl px-4 py-2 outline-none focus:border-pink-500/50 appearance-none min-w-[120px]"
+              className="bg-black/40 border border-white/10 text-white text-sm rounded-xl px-4 py-2 outline-none focus:border-brand-primary/50 appearance-none min-w-[120px]"
             >
               <option value="all">All Methods</option>
               <option value="cash">Cash Only</option>
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold select-none">₱</span>
                         <input 
                           type="number" defaultValue={layout.price} id={`price-${layout.id}`}
-                          className="w-full md:w-28 bg-black/20 border border-white/10 rounded-xl py-3 pl-8 pr-3 text-white focus:border-pink-500/50 focus:bg-black/40 outline-none font-medium"
+                          className="w-full md:w-28 bg-black/20 border border-white/10 rounded-xl py-3 pl-8 pr-3 text-white focus:border-brand-primary/50 focus:bg-black/40 outline-none font-medium"
                         />
                       </div>
                       <button 

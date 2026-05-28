@@ -1,46 +1,61 @@
-import { useState, useEffect } from 'react';
-import { supabase } from './utils/supabase';
-import AdminDashboard from './components/AdminDashboard'; 
-import Login from './components/Login'; // 👈 Import your new file!
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useAuth } from './hooks/useAuth';
+import DashboardLayout from './components/layout/DashboardLayout';
+import Login from './components/Login';
+import DashboardPage from './pages/DashboardPage';
+import BoothsPage from './pages/BoothsPage';
+import TransactionsPage from './pages/TransactionsPage';
+import FramesPage from './pages/FramesPage';
+import PricingPage from './pages/PricingPage';
 
-export default function App() {
-  const [session, setSession] = useState(null);
-  const [isInitializing, setIsInitializing] = useState(true);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 2, // 2 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-  // Check if the user is already logged in when the app loads
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setIsInitializing(false);
-    });
+function AppRoutes() {
+  const { isAuthenticated, isLoading } = useAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Show a blank dark screen for a split second while checking login status
-  if (isInitializing) {
-    return <div className="min-h-screen bg-[#09090b]"></div>;
-  }
-
-  // If the user IS logged in, show the Dashboard!
-  if (session) {
+  // Show blank screen while checking auth
+  if (isLoading) {
     return (
-      <div className="relative bg-[#09090b] min-h-screen">
-        <button 
-          onClick={() => supabase.auth.signOut()}
-          className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white font-semibold py-2 px-6 rounded-full transition-all active:scale-[0.95] z-50"
-        >
-          Sign Out
-        </button>
-        <AdminDashboard />
+      <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+        <div className="w-8 h-8 border-[3px] border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
       </div>
     );
   }
 
-  // If the user is NOT logged in, show the sleek Login Form
-  return <Login />;
+  // Not logged in → show Login
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
+  // Logged in → show Dashboard with nested routes
+  return (
+    <Routes>
+      <Route element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/booths" element={<BoothsPage />} />
+        <Route path="/transactions" element={<TransactionsPage />} />
+        <Route path="/frames" element={<FramesPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
 }
