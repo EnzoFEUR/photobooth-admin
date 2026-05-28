@@ -1,28 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../hooks/useAuth';
+import Loader from '../components/ui/Loader';
 import { DollarSign, Save, Check, AlertCircle } from 'lucide-react';
 
 export default function PricingPage() {
-  const { isSuper } = useAuth();
-  const [layouts, setLayouts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { franchiseeId, isSuper } = useAuth();
+  const queryClient = useQueryClient();
   const [editedPrices, setEditedPrices] = useState({});
   const [savedId, setSavedId] = useState(null);
 
-  useEffect(() => {
-    fetchLayouts();
-  }, []);
-
-  const fetchLayouts = async () => {
-    setIsLoading(true);
-    const { data } = await supabase
-      .from('layout_pricing')
-      .select('*')
-      .order('price', { ascending: true });
-    setLayouts(data || []);
-    setIsLoading(false);
-  };
+  const { data: layouts = [], isLoading } = useQuery({
+    queryKey: ['pricing'],
+    queryFn: async () => {
+      const { data } = await supabase.from('layout_pricing').select('*').order('price', { ascending: true });
+      return data || [];
+    },
+  });
 
   const handlePriceChange = (id, value) => {
     setEditedPrices(prev => ({ ...prev, [id]: value }));
@@ -45,11 +40,7 @@ export default function PricingPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-[3px] border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
-      </div>
-    );
+    return <Loader message="Loading pricing rules..." />;
   }
 
   return (

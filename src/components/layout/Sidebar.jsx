@@ -6,7 +6,8 @@ import {
   Image, 
   DollarSign,
   ChevronLeft,
-  Sparkles
+  Sparkles,
+  Users
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
   { to: '/transactions', label: 'Transactions', icon: Receipt },
   { to: '/frames', label: 'Frames', icon: Image },
   { to: '/pricing', label: 'Pricing', icon: DollarSign },
+  { to: '/franchisees', label: 'Franchisees', icon: Users },
 ];
 
 export default function Sidebar({ isOpen, onClose, isSuper }) {

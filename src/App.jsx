@@ -8,6 +8,7 @@ import BoothsPage from './pages/BoothsPage';
 import TransactionsPage from './pages/TransactionsPage';
 import FramesPage from './pages/FramesPage';
 import PricingPage from './pages/PricingPage';
+import FranchiseesPage from './pages/FranchiseesPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +45,7 @@ function AppRoutes() {
         <Route path="/transactions" element={<TransactionsPage />} />
         <Route path="/frames" element={<FramesPage />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/franchisees" element={<FranchiseesPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>

@@ -1,27 +1,25 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../hooks/useAuth';
+import Loader from '../components/ui/Loader';
 import { Receipt, Filter, Banknote, Smartphone, Calendar } from 'lucide-react';
 
 export default function TransactionsPage() {
   const { franchiseeId, isSuper } = useAuth();
-  const [transactions, setTransactions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [timeFilter, setTimeFilter] = useState('all');
   const [methodFilter, setMethodFilter] = useState('all');
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      setIsLoading(true);
+  const { data: transactions = [], isLoading } = useQuery({
+    queryKey: ['transactions', franchiseeId],
+    queryFn: async () => {
       let query = supabase.from('transactions').select('*').order('created_at', { ascending: false });
       if (!isSuper) query = query.eq('franchisee_id', franchiseeId);
       const { data } = await query;
-      setTransactions(data || []);
-      setIsLoading(false);
-    };
-
-    if (franchiseeId) fetchTransactions();
-  }, [franchiseeId, isSuper]);
+      return data || [];
+    },
+    enabled: !!franchiseeId,
+  });
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter(tx => {
@@ -57,11 +55,7 @@ export default function TransactionsPage() {
   const digitalTotal = totalFiltered - cashTotal;
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-[3px] border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
-      </div>
-    );
+    return <Loader message="Fetching ledger data..." />;
   }
 
   return (
@@ -72,7 +66,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="glass-card p-5">
           <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest mb-1">Total</p>
           <p className="text-2xl font-bold text-white">₱{totalFiltered.toLocaleString()}</p>
@@ -130,16 +124,16 @@ export default function TransactionsPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Date & Time</th>
-                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Layout</th>
-                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Method</th>
-                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest text-right">Amount</th>
+                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest whitespace-nowrap">Date & Time</th>
+                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest whitespace-nowrap">Layout</th>
+                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest whitespace-nowrap">Method</th>
+                <th className="px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-widest text-right whitespace-nowrap">Amount</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
               {filteredTransactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <p className="text-sm font-medium text-white">
                       {new Date(tx.created_at).toLocaleDateString()}
                     </p>
@@ -147,17 +141,17 @@ export default function TransactionsPage() {
                       {new Date(tx.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </p>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className="text-sm text-gray-300 font-medium">{tx.layout_id || 'Unknown'}</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`text-[9px] tracking-wider uppercase font-bold px-2.5 py-1 rounded-md ${
                       tx.payment_method === 'cash' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-blue-500/15 text-blue-400'
                     }`}>
                       {tx.payment_method || 'cash'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right whitespace-nowrap">
                     <span className="text-sm font-bold text-pink-400">₱{Number(tx.amount).toLocaleString()}</span>
                   </td>
                 </tr>

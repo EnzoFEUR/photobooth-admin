@@ -1,44 +1,42 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../hooks/useAuth';
 import StatCard from '../components/ui/StatCard';
+import Loader from '../components/ui/Loader';
 import { DollarSign, Camera, Monitor, Image, TrendingUp } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function DashboardPage() {
   const { franchiseeId, isSuper } = useAuth();
-  const [transactions, setTransactions] = useState([]);
-  const [booths, setBooths] = useState([]);
-  const [frames, setFrames] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      setIsLoading(true);
-
-      // Fetch transactions
+  const { data: dashboardData, isLoading } = useQuery({
+    queryKey: ['dashboard', franchiseeId],
+    queryFn: async () => {
       let txQuery = supabase.from('transactions').select('*').order('created_at', { ascending: false });
-      if (!isSuper) txQuery = txQuery.eq('franchisee_id', franchiseeId);
-      const { data: txData } = await txQuery;
-
-      // Fetch booths
       let boothQuery = supabase.from('booths').select('*');
-      if (!isSuper) boothQuery = boothQuery.eq('franchisee_id', franchiseeId);
-      const { data: boothData } = await boothQuery;
-
-      // Fetch frames
       let frameQuery = supabase.from('frames').select('*');
-      if (!isSuper) frameQuery = frameQuery.eq('franchisee_id', franchiseeId);
-      const { data: frameData } = await frameQuery;
 
-      setTransactions(txData || []);
-      setBooths(boothData || []);
-      setFrames(frameData || []);
-      setIsLoading(false);
-    };
+      if (!isSuper) {
+        txQuery = txQuery.eq('franchisee_id', franchiseeId);
+        boothQuery = boothQuery.eq('franchisee_id', franchiseeId);
+        frameQuery = frameQuery.eq('franchisee_id', franchiseeId);
+      }
 
-    if (franchiseeId) fetchAll();
-  }, [franchiseeId, isSuper]);
+      const [txRes, boothRes, frameRes] = await Promise.all([txQuery, boothQuery, frameQuery]);
+      
+      return {
+        transactions: txRes.data || [],
+        booths: boothRes.data || [],
+        frames: frameRes.data || []
+      };
+    },
+    enabled: !!franchiseeId,
+  });
+
+  const transactions = dashboardData?.transactions || [];
+  const booths = dashboardData?.booths || [];
+  const frames = dashboardData?.frames || [];
 
   // Compute stats
   const totalRevenue = transactions.reduce((sum, tx) => sum + Number(tx.amount), 0);
@@ -68,11 +66,7 @@ export default function DashboardPage() {
   }, [transactions]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-[3px] border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
-      </div>
-    );
+    return <Loader message="Analyzing telemetry..." />;
   }
 
   return (
@@ -86,7 +80,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
         <StatCard label="Total Revenue" value={`₱${totalRevenue.toLocaleString()}`} icon={DollarSign} color="pink" />
         <StatCard label="Sessions Today" value={todaySessions} icon={Camera} color="blue" />
         <StatCard label="Active Booths" value={`${activeBooths}/${booths.length}`} icon={Monitor} color="green" />

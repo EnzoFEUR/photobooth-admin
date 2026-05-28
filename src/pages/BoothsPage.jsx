@@ -1,25 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../hooks/useAuth';
+import Loader from '../components/ui/Loader';
 import { Monitor, Wifi, WifiOff, Droplets, Scroll, MapPin, Clock, PowerOff, Unlock, Briefcase } from 'lucide-react';
 
 export default function BoothsPage() {
   const { franchiseeId, isSuper } = useAuth();
-  const [booths, setBooths] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBooths = async () => {
-      setIsLoading(true);
+  const { data: booths = [], isLoading } = useQuery({
+    queryKey: ['booths', franchiseeId],
+    queryFn: async () => {
       let query = supabase.from('booths').select('*').order('created_at', { ascending: false });
       if (!isSuper) query = query.eq('franchisee_id', franchiseeId);
       const { data } = await query;
-      setBooths(data || []);
-      setIsLoading(false);
-    };
-
-    if (franchiseeId) fetchBooths();
-  }, [franchiseeId, isSuper]);
+      return data || [];
+    },
+    enabled: !!franchiseeId,
+    refetchInterval: 1000 * 60, // Refresh booth status automatically every minute!
+  });
 
   const isOnline = (heartbeat) => {
     if (!heartbeat) return false;
@@ -49,11 +47,7 @@ export default function BoothsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-[3px] border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
-      </div>
-    );
+    return <Loader message="Connecting to booths..." />;
   }
 
   return (
