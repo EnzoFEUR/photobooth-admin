@@ -54,10 +54,43 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </QueryClientProvider>
+    <>
+      {/* Global Watermark Overlay */}
+      <div style={{
+        position: 'fixed', 
+        inset: '-50%', 
+        pointerEvents: 'none', /* Keeps the prototype clickable so they can test it */
+        zIndex: 9999, 
+        overflow: 'hidden',
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '70px', /* TIGHTER GAP: Makes it impossible to crop a clean square between words */
+        opacity: 0.15, /* BUMPED UP: Visible enough to ruin a screenshot, but not blinding */
+        transform: 'rotate(-24deg)', 
+        userSelect: 'none',
+      }}>
+        {Array.from({ length: 250 }).map((_, i) => (
+          <span 
+            key={i} 
+            className="text-xl font-semibold uppercase tracking-[0.2em]"
+            style={{
+              fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
+              color: 'currentColor', 
+            }}
+          >
+            Prototype Enzo
+          </span>
+        ))}
+      </div>
+
+      {/* Main App Content */}
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </>
   );
 }

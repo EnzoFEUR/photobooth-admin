@@ -14,7 +14,8 @@ const STUDIO_LAYOUTS = [
   { id: 'grid-6', label: 'Grid 6' },
   { id: 'multi-frame-6', label: 'Multi-frame 6' },
   { id: 'landscape-2', label: 'Landscape 2' },
-  { id: 'landscape-3', label: 'Landscape 3' }
+  { id: 'landscape-3', label: 'Landscape 3' },
+  { id: 'mini-strip-8', label: 'Mini Strip 8' }
 ];
 
 const getTargetLayoutId = (frameName) => {
