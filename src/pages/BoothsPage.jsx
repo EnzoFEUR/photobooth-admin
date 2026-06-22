@@ -12,7 +12,10 @@ export default function BoothsPage() {
     queryFn: async () => {
       let query = supabase.from('booths').select('*').order('created_at', { ascending: false });
       if (!isSuper) query = query.eq('franchisee_id', franchiseeId);
-      const { data } = await query;
+      const { data, error } = await query;
+      if (error) {
+        throw new Error(error.message);
+      }
       return data || [];
     },
     enabled: !!franchiseeId,
@@ -27,10 +30,15 @@ export default function BoothsPage() {
   const handleRevokeTerminal = async (id) => {
     if (confirm("Are you sure you want to remotely kill this terminal? It will instantly log out and wipe its local data on the next ping.")) {
       try {
-        await supabase.from('booths').update({ force_logout: true }).eq('id', id);
-        alert("Kill switch activated! Terminal will self-destruct on next heartbeat.");
+        const { error } = await supabase.from('booths').update({ force_logout: true }).eq('id', id);
+        if (error) {
+          alert(`Failed to activate kill switch: ${error.message}`);
+        } else {
+          alert("Kill switch activated! Terminal will self-destruct on next heartbeat.");
+        }
       } catch (err) {
         console.error(err);
+        alert("An unexpected error occurred.");
       }
     }
   };

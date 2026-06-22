@@ -149,13 +149,14 @@ CREATE POLICY "Franchisees can delete their own frames"
   USING (franchisee_id = auth.uid());
 
 -- =============================================
--- 6. LAYOUT PRICING TABLE (Already exists — add RLS)
+-- 6. LAYOUT PRICING TABLE
 -- =============================================
--- If layout_pricing already exists, just enable RLS:
--- ALTER TABLE layout_pricing ENABLE ROW LEVEL SECURITY;
--- CREATE POLICY "Anyone authenticated can read pricing"
---   ON layout_pricing FOR SELECT
---   USING (auth.uid() IS NOT NULL);
--- CREATE POLICY "Super admins can update pricing"
---   ON layout_pricing FOR UPDATE
---   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'super_admin'));
+ALTER TABLE layout_pricing ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone authenticated can read pricing"
+  ON layout_pricing FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY "Super admins can update pricing"
+  ON layout_pricing FOR UPDATE
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'super_admin'));

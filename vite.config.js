@@ -33,5 +33,14 @@ export default defineConfig({
   ],
   optimizeDeps: {
     include: ['recharts']
+  },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      }
+    }
   }
 })

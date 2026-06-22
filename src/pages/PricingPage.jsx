@@ -35,7 +35,7 @@ export default function PricingPage() {
     if (!error) {
       setSavedId(layout.id);
       setTimeout(() => setSavedId(null), 2000);
-      fetchLayouts();
+      queryClient.invalidateQueries({ queryKey: ['pricing'] });
     }
   };
 
