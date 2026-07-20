@@ -26,7 +26,7 @@ function AppRoutes() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
-        <div className="w-8 h-8 border-[3px] border-pink-500/30 border-t-pink-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-[3px] border-zinc-700 border-t-zinc-400 rounded-full animate-spin" />
       </div>
     );
   }
@@ -67,7 +67,7 @@ export default function App() {
         justifyContent: 'center',
         alignItems: 'center',
         gap: '70px', /* TIGHTER GAP: Makes it impossible to crop a clean square between words */
-        opacity: 0.15, /* BUMPED UP: Visible enough to ruin a screenshot, but not blinding */
+        opacity: 0.5, /* BUMPED UP: Visible enough to ruin a screenshot, but not blinding */
         transform: 'rotate(-24deg)', 
         userSelect: 'none',
       }}>
@@ -80,7 +80,7 @@ export default function App() {
               color: 'currentColor', 
             }}
           >
-            Prototype Enzo
+            Prototype
           </span>
         ))}
       </div>

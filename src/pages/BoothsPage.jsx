@@ -59,49 +59,45 @@ export default function BoothsPage() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Booth Telemetry</h1>
-        <p className="text-gray-500 font-medium mt-1">Monitor your physical kiosk machines in real-time</p>
+        <h1 className="text-xl font-semibold text-zinc-50">Booth Telemetry</h1>
+        <p className="text-sm text-zinc-500 mt-1">Monitor your physical kiosk machines in real-time</p>
       </div>
 
       {booths.length === 0 ? (
-        <div className="glass-card p-12 text-center">
-          <Monitor className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-400">No Booths Registered</h3>
-          <p className="text-sm text-gray-600 mt-2">Your physical kiosk machines will appear here once connected.</p>
+        <div className="bg-[#111113] border border-zinc-800 rounded-lg p-12 text-center">
+          <Monitor className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-zinc-400">No Booths Registered</h3>
+          <p className="text-sm text-zinc-600 mt-2">Your physical kiosk machines will appear here once connected.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 stagger-children">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {booths.map((booth) => {
             const online = isOnline(booth.last_heartbeat);
             return (
-              <div key={booth.id} className="glass-card p-6 space-y-5 group hover:border-white/[0.15] transition-all duration-300">
+              <div key={booth.id} className="bg-[#111113] border border-zinc-800 rounded-lg p-5 space-y-5 hover:border-zinc-700 transition-colors">
                 {/* Header */}
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-base font-bold text-white">{booth.booth_name}</h3>
-                    <div className="flex items-center gap-1.5 mt-1.5 text-gray-500">
+                    <h3 className="text-base font-semibold text-zinc-50">{booth.booth_name}</h3>
+                    <div className="flex items-center gap-1.5 mt-1.5 text-zinc-500">
                       <MapPin className="w-3 h-3" />
                       <span className="text-xs font-medium">{booth.location_name || 'No location set'}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
+                    <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${
                       online 
-                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20' 
-                        : 'bg-red-500/15 text-red-400 border border-red-500/20'
+                        ? 'bg-emerald-500/10 text-emerald-400' 
+                        : 'bg-red-500/10 text-red-400'
                     }`}>
                       {online ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
                       {online ? 'Online' : 'Offline'}
                     </div>
 
                     {/* Operating Mode Badge */}
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-                      booth.is_event_mode 
-                        ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
-                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                    }`}>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-800 text-zinc-300">
                       {booth.is_event_mode ? <Unlock className="w-3 h-3" /> : <Briefcase className="w-3 h-3" />}
                       {booth.is_event_mode ? 'Event Mode' : 'Business Mode'}
                     </div>
@@ -112,17 +108,17 @@ export default function BoothsPage() {
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center gap-2 text-zinc-400">
                         <Scroll className="w-3.5 h-3.5" />
-                        <span className="text-xs font-semibold uppercase tracking-wider">Media Remaining</span>
+                        <span className="text-xs font-medium">Media Remaining</span>
                       </div>
-                      <span className={`text-xs font-bold ${booth.prints_remaining > 150 ? 'text-emerald-400' : booth.prints_remaining > 50 ? 'text-amber-400' : 'text-red-400'}`}>
+                      <span className={`text-xs font-semibold ${booth.prints_remaining > 150 ? 'text-emerald-400' : booth.prints_remaining > 50 ? 'text-amber-400' : 'text-red-400'}`}>
                         {booth.prints_remaining} / 700
                       </span>
                     </div>
-                    <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                       <div 
-                        className={`h-full rounded-full transition-all duration-700 ${
+                        className={`h-full rounded-full transition-all duration-500 ${
                           booth.prints_remaining > 150 ? 'bg-emerald-500' : booth.prints_remaining > 50 ? 'bg-amber-500' : 'bg-red-500'
                         }`}
                         style={{ width: `${(booth.prints_remaining / 700) * 100}%` }}
@@ -131,24 +127,24 @@ export default function BoothsPage() {
                   </div>
                   
                   {/* Lifetime Prints */}
-                  <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                     <span className="text-xs text-gray-500">Lifetime Prints</span>
-                     <span className="text-xs font-bold text-gray-300">{booth.total_prints_lifetime?.toLocaleString() || 0}</span>
+                  <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
+                     <span className="text-xs text-zinc-500">Lifetime Prints</span>
+                     <span className="text-xs font-semibold text-zinc-300">{booth.total_prints_lifetime?.toLocaleString() || 0}</span>
                   </div>
                 </div>
 
                 {/* Last Heartbeat & Kill Switch */}
-                <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                  <div className="flex items-center gap-1.5 text-gray-600">
+                <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
+                  <div className="flex items-center gap-1.5 text-zinc-600">
                     <Clock className="w-3 h-3" />
-                    <span className="text-[10px] font-medium uppercase tracking-wider">
+                    <span className="text-[11px] font-medium">
                       Last ping: {getTimeSince(booth.last_heartbeat)}
                     </span>
                   </div>
                   
                   <button 
                     onClick={() => handleRevokeTerminal(booth.id)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold uppercase transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[11px] font-medium transition-colors"
                   >
                     <PowerOff className="w-3 h-3" /> Revoke
                   </button>

@@ -20,10 +20,10 @@ export default function DashboardLayout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         
         {/* Topbar */}
-        <header className="h-16 flex items-center justify-between px-6 border-b border-white/[0.06] bg-[#09090b]/80 backdrop-blur-xl shrink-0">
+        <header className="h-16 flex items-center justify-between px-6 border-b border-zinc-800 bg-[#09090b] shrink-0">
           <button 
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white transition-colors"
+            className="lg:hidden text-zinc-400 hover:text-zinc-50 transition-colors"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -32,15 +32,15 @@ export default function DashboardLayout() {
 
           <div className="flex items-center gap-4">
             {/* User Pill */}
-            <div className="flex items-center gap-3 bg-white/[0.04] border border-white/[0.08] rounded-full pl-3 pr-4 py-1.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
-                <User className="w-3.5 h-3.5 text-white" />
+            <div className="flex items-center gap-3 bg-[#111113] border border-zinc-800 rounded-full pl-3 pr-4 py-1.5">
+              <div className="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center">
+                <User className="w-3.5 h-3.5 text-zinc-400" />
               </div>
               <div className="hidden sm:block">
-                <p className="text-xs font-semibold text-white leading-none">
+                <p className="text-xs font-semibold text-zinc-50 leading-none">
                   {profile?.full_name || 'Admin'}
                 </p>
-                <p className="text-[10px] text-gray-500 font-medium mt-0.5 capitalize">
+                <p className="text-[10px] text-zinc-500 font-medium mt-0.5 capitalize">
                   {profile?.role?.replace('_', ' ') || 'User'}
                 </p>
               </div>
@@ -49,7 +49,7 @@ export default function DashboardLayout() {
             {/* Sign Out */}
             <button 
               onClick={signOut}
-              className="text-gray-500 hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-white/[0.04]"
+              className="text-zinc-500 hover:text-zinc-300 transition-colors p-2 rounded-lg hover:bg-zinc-800/50"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />

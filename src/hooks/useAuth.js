@@ -42,8 +42,8 @@ export function useAuth() {
 
     if (error) {
       console.error('Failed to fetch profile:', error.message);
-      // If profile doesn't exist yet (race condition), create a minimal one
-      setProfile({ id: userId, role: 'franchisee', full_name: '' });
+      // Security fix: Don't grant default franchisee access on error
+      setProfile(null);
     } else {
       setProfile(data);
     }
@@ -58,7 +58,7 @@ export function useAuth() {
 
   // Derived state
   const user = session?.user || null;
-  const role = profile?.role || 'franchisee';
+  const role = profile?.role || null;
   const isSuper = role === 'super_admin';
   const franchiseeId = user?.id || null;
 
@@ -70,7 +70,7 @@ export function useAuth() {
     isSuper,
     franchiseeId,
     isLoading,
-    isAuthenticated: !!session,
+    isAuthenticated: !!session && !!profile,
     signOut,
   }), [session, profile, isLoading]);
 }

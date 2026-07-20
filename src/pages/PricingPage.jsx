@@ -6,7 +6,7 @@ import Loader from '../components/ui/Loader';
 import { DollarSign, Save, Check, AlertCircle } from 'lucide-react';
 
 export default function PricingPage() {
-  const { franchiseeId, isSuper } = useAuth();
+  const { franchiseeId, isSuper, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const [editedPrices, setEditedPrices] = useState({});
   const [savedId, setSavedId] = useState(null);
@@ -39,55 +39,55 @@ export default function PricingPage() {
     }
   };
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return <Loader message="Loading pricing rules..." />;
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Layout Pricing</h1>
-        <p className="text-gray-500 font-medium mt-1">
+        <h1 className="text-xl font-semibold text-zinc-50">Layout Pricing</h1>
+        <p className="text-sm text-zinc-500 mt-1">
           {isSuper ? 'Set prices for all photobooth layouts' : 'View current pricing for your kiosks'}
         </p>
       </div>
 
       {!isSuper && (
-        <div className="flex items-center gap-3 px-5 py-4 rounded-xl text-sm font-medium border bg-amber-500/10 border-amber-500/20 text-amber-400">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium border bg-amber-500/10 border-amber-500/20 text-amber-400">
           <AlertCircle className="w-4 h-4 shrink-0" />
           Only Super Admins can modify pricing. Contact your administrator for changes.
         </div>
       )}
 
-      <div className="glass-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-2">
-          <DollarSign className="w-4 h-4 text-pink-400" />
-          <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Active Layouts</h3>
+      <div className="bg-[#111113] border border-zinc-800 rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-800 flex items-center gap-2">
+          <DollarSign className="w-4 h-4 text-zinc-400" />
+          <h3 className="text-sm font-medium text-zinc-400">Active Layouts</h3>
         </div>
 
-        <div className="divide-y divide-white/[0.04]">
+        <div className="divide-y divide-zinc-800">
           {layouts.map((layout) => {
             const currentPrice = editedPrices[layout.id] ?? layout.price;
             const hasChanged = editedPrices[layout.id] !== undefined && editedPrices[layout.id] !== layout.price;
 
             return (
-              <div key={layout.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-5 hover:bg-white/[0.02] transition-colors">
+              <div key={layout.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-5 hover:bg-zinc-800/30 transition-colors">
                 <div>
-                  <p className="text-base font-semibold text-white">{layout.name}</p>
-                  <p className="text-[10px] text-gray-600 font-mono mt-1 uppercase tracking-wider bg-white/[0.04] px-2.5 py-1 rounded-md inline-block">
+                  <p className="text-base font-medium text-zinc-50">{layout.name}</p>
+                  <p className="text-[11px] text-zinc-600 font-mono mt-1 bg-zinc-800 px-2 py-0.5 rounded-md inline-block">
                     {layout.id}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold text-sm">₱</span>
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 font-medium text-sm">₱</span>
                     <input 
                       type="number"
                       value={currentPrice}
                       onChange={(e) => handlePriceChange(layout.id, parseInt(e.target.value) || 0)}
                       disabled={!isSuper}
-                      className="w-28 bg-white/[0.04] border border-white/[0.08] rounded-xl py-3 pl-8 pr-3 text-white text-sm font-medium outline-none focus:border-pink-500/30 focus:bg-white/[0.06] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-28 bg-zinc-800 border border-zinc-700 rounded-lg py-2.5 pl-8 pr-3 text-zinc-50 text-sm font-medium outline-none focus:border-zinc-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
 
@@ -95,12 +95,12 @@ export default function PricingPage() {
                     <button
                       onClick={() => handleSave(layout)}
                       disabled={!hasChanged}
-                      className={`flex items-center gap-1.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all active:scale-[0.97] ${
+                      className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                         savedId === layout.id 
                           ? 'bg-emerald-500 text-white' 
                           : hasChanged 
-                            ? 'bg-white text-black hover:bg-gray-100' 
-                            : 'bg-white/[0.06] text-gray-600 cursor-not-allowed'
+                            ? 'bg-zinc-50 text-zinc-900 hover:bg-zinc-200' 
+                            : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                       }`}
                     >
                       {savedId === layout.id ? (
@@ -117,7 +117,7 @@ export default function PricingPage() {
         </div>
 
         {layouts.length === 0 && (
-          <div className="text-center text-gray-600 py-12 font-medium">No layouts configured yet</div>
+          <div className="text-center text-zinc-600 py-12 font-medium">No layouts configured yet</div>
         )}
       </div>
     </div>

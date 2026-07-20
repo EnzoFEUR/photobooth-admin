@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================= */
-/* 🎨 PHOTOBOOTH ADMIN DESIGN SYSTEM            */
-/* ============================================= */
-
 @layer base {
   * {
     -webkit-font-smoothing: antialiased;
@@ -13,71 +9,56 @@
   }
 
   body {
-    @apply bg-[#09090b] text-white font-sans;
+    @apply bg-[#09090b] text-zinc-50 font-sans;
   }
 
-  /* Premium custom scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 999px;
+    @apply bg-zinc-700 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    @apply bg-zinc-600;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-[#111113] border border-zinc-800 rounded-lg;
   }
 }
 
 @layer utilities {
-  /* Glass card utility */
-  .glass-card {
-    @apply bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.4)];
-    transform: translateZ(0);
-    will-change: transform, opacity, filter;
-    backface-visibility: hidden;
-    transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1);
-  }
-  
-  .glass-card:hover {
-    @apply bg-white/[0.08] border-white/[0.15] shadow-[0_30px_60px_rgba(0,0,0,0.6)];
-    transform: translateY(-4px) scale(1.01) translateZ(0);
-  }
-
-  /* Liquid iOS-like fade-in animation */
   .animate-fade-in {
-    animation: iosFadeIn 0.8s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-    will-change: transform, opacity, filter;
+    animation: fadeIn 0.25s ease-out forwards;
   }
 
-  @keyframes iosFadeIn {
-    from { 
-      opacity: 0; 
-      transform: translateY(24px) scale(0.96) translateZ(0); 
-      filter: blur(12px);
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
     }
-    to { 
-      opacity: 1; 
-      transform: translateY(0) scale(1) translateZ(0); 
-      filter: blur(0px);
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
-  /* Liquid staggered children */
   .stagger-children > * {
     opacity: 0;
-    animation: iosFadeIn 0.9s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    animation: fadeIn 0.25s ease-out forwards;
   }
-  .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
-  .stagger-children > *:nth-child(2) { animation-delay: 0.12s; }
-  .stagger-children > *:nth-child(3) { animation-delay: 0.19s; }
-  .stagger-children > *:nth-child(4) { animation-delay: 0.26s; }
-  .stagger-children > *:nth-child(5) { animation-delay: 0.33s; }
-  .stagger-children > *:nth-child(6) { animation-delay: 0.40s; }
-  .stagger-children > *:nth-child(7) { animation-delay: 0.47s; }
-  .stagger-children > *:nth-child(8) { animation-delay: 0.54s; }
+  .stagger-children > *:nth-child(1) { animation-delay: 0.03s; }
+  .stagger-children > *:nth-child(2) { animation-delay: 0.06s; }
+  .stagger-children > *:nth-child(3) { animation-delay: 0.09s; }
+  .stagger-children > *:nth-child(4) { animation-delay: 0.12s; }
+  .stagger-children > *:nth-child(5) { animation-delay: 0.15s; }
+  .stagger-children > *:nth-child(6) { animation-delay: 0.18s; }
+  .stagger-children > *:nth-child(7) { animation-delay: 0.21s; }
+  .stagger-children > *:nth-child(8) { animation-delay: 0.24s; }
 }
