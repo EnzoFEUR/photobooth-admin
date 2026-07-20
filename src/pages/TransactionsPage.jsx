@@ -62,7 +62,7 @@ export default function TransactionsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-semibold text-zinc-50">Transactions</h1>
-        <p className="text-sm text-zinc-500 mt-1">Track and reconcile all cash and digital payments</p>
+        <p className="text-sm text-zinc-500 mt-1">Track all cash and digital payments</p>
       </div>
 
       {/* Summary Cards */}

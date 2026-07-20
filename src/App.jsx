@@ -67,7 +67,7 @@ export default function App() {
         justifyContent: 'center',
         alignItems: 'center',
         gap: '70px', /* TIGHTER GAP: Makes it impossible to crop a clean square between words */
-        opacity: 0.5, /* BUMPED UP: Visible enough to ruin a screenshot, but not blinding */
+        opacity: 0.05, /* BUMPED UP: Visible enough to ruin a screenshot, but not blinding */
         transform: 'rotate(-24deg)', 
         userSelect: 'none',
       }}>

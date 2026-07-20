@@ -107,9 +107,6 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="text-center text-[10px] text-zinc-600 mt-8 font-medium tracking-wider uppercase">
-          Photobooth v1.0 • Secured by Supabase
-        </p>
       </div>
     </div>
   );
