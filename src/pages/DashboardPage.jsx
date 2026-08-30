@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['dashboard', franchiseeId],
     queryFn: async () => {
-      let txQuery = supabase.from('transactions').select('*').order('created_at', { ascending: false });
+      let txQuery = supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(500);
       let boothQuery = supabase.from('booths').select('*');
       let frameQuery = supabase.from('frames').select('*');
 

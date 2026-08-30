@@ -13,14 +13,32 @@ export default function FranchiseesPage() {
     queryKey: ['franchisees'],
     queryFn: async () => {
       if (!isSuper) return [];
-      const { data: profiles } = await supabase.from('profiles').select('*').order('created_at', { ascending: true });
-      if (!profiles) return [];
+      
+      const [profilesRes, boothsRes, txRes] = await Promise.all([
+        supabase.from('profiles').select('*').order('created_at', { ascending: true }),
+        supabase.from('booths').select('id, franchisee_id'),
+        supabase.from('transactions').select('franchisee_id, amount')
+      ]);
 
-      return await Promise.all(profiles.map(async (profile) => {
-        const { count: boothCount } = await supabase.from('booths').select('*', { count: 'exact', head: true }).eq('franchisee_id', profile.id);
-        const { data: txData } = await supabase.from('transactions').select('amount').eq('franchisee_id', profile.id);
-        const totalRevenue = (txData || []).reduce((sum, tx) => sum + Number(tx.amount), 0);
-        return { ...profile, boothCount: boothCount || 0, totalRevenue };
+      const profiles = profilesRes.data || [];
+      const booths = boothsRes.data || [];
+      const transactions = txRes.data || [];
+
+      // Group booths and revenue by franchisee_id in O(N) memory
+      const boothCountMap = {};
+      booths.forEach(b => {
+        boothCountMap[b.franchisee_id] = (boothCountMap[b.franchisee_id] || 0) + 1;
+      });
+
+      const revenueMap = {};
+      transactions.forEach(tx => {
+        revenueMap[tx.franchisee_id] = (revenueMap[tx.franchisee_id] || 0) + Number(tx.amount || 0);
+      });
+
+      return profiles.map(profile => ({
+        ...profile,
+        boothCount: boothCountMap[profile.id] || 0,
+        totalRevenue: revenueMap[profile.id] || 0
       }));
     },
     enabled: isSuper,

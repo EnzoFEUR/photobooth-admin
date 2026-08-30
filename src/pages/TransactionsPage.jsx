@@ -13,7 +13,7 @@ export default function TransactionsPage() {
   const { data: transactions = [], isLoading } = useQuery({
     queryKey: ['transactions', franchiseeId],
     queryFn: async () => {
-      let query = supabase.from('transactions').select('*').order('created_at', { ascending: false });
+      let query = supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(200);
       if (!isSuper) query = query.eq('franchisee_id', franchiseeId);
       const { data } = await query;
       return data || [];

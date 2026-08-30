@@ -6,16 +6,16 @@ import Loader from '../components/ui/Loader';
 import { Upload, Trash2, Image as ImageIcon, ToggleLeft, ToggleRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const STUDIO_LAYOUTS = [
-  { id: 'strip-4', label: 'Classic Strip 4' },
-  { id: 'strip-4-flipped', label: 'Flipped Strip 4' },
-  { id: 'strip-horizontal', label: 'Horizontal Strip' },
-  { id: 'vintage-strip', label: 'Vintage Strip' },
-  { id: 'grid-4', label: 'Grid 4' },
-  { id: 'grid-6', label: 'Grid 6' },
-  { id: 'multi-frame-6', label: 'Multi-frame 6' },
-  { id: 'landscape-2', label: 'Landscape 2' },
-  { id: 'landscape-3', label: 'Landscape 3' },
-  { id: 'mini-strip-8', label: 'Mini Strip 8' }
+  { id: 'strip-4', label: 'Classic Strip 4 (2x6)' },
+  { id: 'strip-4-flipped', label: 'Classic Strip 4 Flipped (2x6)' },
+  { id: 'strip-horizontal', label: 'Horizontal Strip (6x2)' },
+  { id: 'grid-4', label: 'Multi-Frame 4 (4x6)' },
+  { id: 'grid-4-flipped', label: 'Multi-Frame 4 Flipped (4x6)' },
+  { id: 'grid-4-landscape', label: 'Wide Grid 4 (6x4)' },
+  { id: 'grid-6', label: 'Multi-Frame 6 (4x6)' },
+  { id: 'grid-6-flipped', label: 'Multi-Frame 6 Flipped (4x6)' },
+  { id: 'vintage-strip', label: 'Vintage Strip (2x6)' },
+  { id: 'mini-strip-8', label: 'Mini Strip 8 Dual Column (2x6)' }
 ];
 
 const getTargetLayoutId = (frameName) => {
